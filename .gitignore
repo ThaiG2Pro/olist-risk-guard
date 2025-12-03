@@ -1,0 +1,15 @@
+# Ignore Data (Dữ liệu thường nặng >100MB, Github sẽ chặn)
+data/
+*.csv
+
+# Ignore Secrets (BẢO MẬT TUYỆT ĐỐI)
+.streamlit/secrets.toml
+.env
+
+# Ignore System Files
+__pycache__/
+*.pyc
+.DS_Store
+.ipynb_checkpoints/
+
+logs/

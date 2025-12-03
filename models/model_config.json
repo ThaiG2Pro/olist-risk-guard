@@ -1,0 +1,77 @@
+{
+    "thresholds": {
+        "high_risk": 0.3971631205673759,
+        "low_risk": 0.16404494382022472
+    },
+    "features": {
+        "all_features": [
+            "num_items",
+            "total_price",
+            "total_freight",
+            "customer_zip_code_prefix",
+            "customer_state",
+            "seller_zip_code_prefix",
+            "seller_state",
+            "product_category_name",
+            "product_weight_g",
+            "product_length_cm",
+            "product_height_cm",
+            "product_width_cm",
+            "product_photos_qty",
+            "product_description_lenght",
+            "product_category_name_english",
+            "purchase_month",
+            "purchase_day",
+            "purchase_hour",
+            "purchase_dayofweek",
+            "is_weekend",
+            "is_month_end",
+            "distance_km",
+            "freight_ratio",
+            "is_high_freight",
+            "desc_len_log",
+            "has_enough_photos",
+            "seller_recent_defect_rate",
+            "seller_risk_score",
+            "seller_orders",
+            "is_new_seller",
+            "route_median_days",
+            "route_std_days",
+            "route_volume",
+            "days_estimated",
+            "gap_promise_vs_reality",
+            "is_optimistic_promise",
+            "Cluster_0",
+            "Cluster_1",
+            "Cluster_2",
+            "Cluster_3"
+        ],
+        "skewed_cols": [
+            "total_price",
+            "total_freight",
+            "distance_km",
+            "gap_promise_vs_reality",
+            "product_weight_g"
+        ],
+        "categorical_cols": [
+            "customer_state",
+            "seller_state",
+            "product_category_name_english",
+            "product_category_name",
+            "payment_type"
+        ],
+        "clustering_features": [
+            "total_price",
+            "total_freight",
+            "freight_ratio",
+            "distance_km",
+            "product_photos_qty",
+            "product_description_lenght",
+            "product_weight_g"
+        ]
+    },
+    "metrics": {
+        "auc": 0.59,
+        "precision_red": 0.3119
+    }
+}

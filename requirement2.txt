@@ -1,0 +1,13 @@
+streamlit
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+joblib
+lightgbm
+shap
+optuna
+google-generativeai
+wordcloud
+scipy
