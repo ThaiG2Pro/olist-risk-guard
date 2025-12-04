@@ -100,12 +100,11 @@ def run_full_pipeline(df_raw, _config, _prep_artifacts, _kmeans_model, _hybrid_m
     return df_display
 
 def get_cluster_name_ui(cluster_id):
-    """[FIX LỖI 5] Map số cluster thành tên hiển thị"""
     mapping = {
         2: "💎 VIP",
-        1: "💰 Price Sensitive",
-        0: "📦 Standard",
-        3: "📍 Local / Others"
+        1: "💸 Shipping Pain",
+        3: "📍 Local Goldmine",
+        0: "📦 Standard User"
     }
     return mapping.get(cluster_id, f"Cluster {cluster_id}")
 
@@ -262,25 +261,28 @@ if st.session_state.processed_data is not None:
                 st.caption("Đơn hàng an toàn. Tiết kiệm nguồn lực.")
 
         with col_right:
-            # [SỬA] Kiểm tra final_api_key thay vì st.secrets
             if final_api_key:
                 if 'api_key' not in st.session_state or st.session_state.api_key != final_api_key:
                     st.session_state.api_key = final_api_key
                     st.session_state.is_configured = lu.init_gemini(final_api_key)
 
                 if st.session_state.is_configured:
-                    if st.button(action_label, type="primary"):
-                        with st.spinner("Gemini đang viết..."):
-                            content = lu.generate_prescriptive_content(
-                                order, risk , order['Cluster'], ai_task_type
-                            )
-                            st.session_state.ai_email_content = content
-                            st.session_state.ai_content_type = ai_task_type
+                    if show_ai_button:
+                        if st.button(action_label, type="primary"):
+                            with st.spinner("Gemini đang viết..."):
+                                content = lu.generate_prescriptive_content(
+                                    order, risk , order['Cluster'], ai_task_type
+                                )
+                                st.session_state.ai_email_content = content
+                                st.session_state.ai_content_type = ai_task_type
                 else:
-                    st.session_state.ai_email_content = None  # Xóa nội dung cũ nếu key lỗi
-                    st.error("API Key không hợp lệ. Vui lòng kiểm tra lại.")
+                    if show_ai_button:
+                        st.session_state.ai_email_content = None
+                        st.error("API Key không hợp lệ. Vui lòng kiểm tra lại.")
+
             else:
-                st.info("Vui lòng nhập Gemini API Key ở thanh bên trái để dùng tính năng này.")
+                if show_ai_button:
+                    st.info("Vui lòng nhập Gemini API Key ở thanh bên trái để dùng tính năng này.")
 
             #  Hiển thị nội dung AI (Markdown Render)
             if st.session_state.ai_email_content:

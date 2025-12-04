@@ -13,29 +13,32 @@ def init_gemini(api_key):
 
 def get_proactive_strategy(cluster_id):
     """
-    Chiến lược 'Phủ đầu' (Pre-emptive):
-    Tập trung vào việc trấn an, tạo niềm tin và giá trị gia tăng thay vì xin lỗi.
+    Chiến lược 'Phủ đầu' dựa trên 4 Personas mới:
+    0: Standard
+    1: Shipping Pain (Nhạy cảm phí ship - Cần Voucher)
+    2: VIP Bulky (Hàng to tiền lớn - Cần hẹn giờ/An toàn)
+    3: Local Goldmine (Khách gần - Cần Upsell)
     """
     strategies = {
-        2: { # VIP
-            "tone": "Trang trọng, Đẳng cấp, Cá nhân hóa cao.",
-            "action": "Thông báo đã kích hoạt chế độ 'Theo dõi ưu tiên' (Priority Monitoring).",
-            "value_add": "Tặng voucher đặc quyền cho lần sau (như một lời tri ân, không phải đền bù)."
+        2: { # VIP Bulky
+            "tone": "Trang trọng, Đẳng cấp nhưng nhấn mạnh sự Cẩn thận (Care).",
+            "action": "Thông báo đã dặn dò Shipper xử lý nhẹ tay vì hàng giá trị cao & cồng kềnh. Đề xuất hẹn giờ giao.",
+            "value_add": "Cam kết bảo hiểm hàng hóa 100%."
         },
-        1: { # Price Sensitive
-            "tone": "Thân thiện, Nhấn mạnh vào sự tiết kiệm/giá trị.",
-            "action": "Xác nhận đơn hàng thành công và cam kết không phát sinh chi phí.",
-            "value_add": "Tặng mã Freeship hoặc giảm 5% cho đơn tiếp theo."
+        1: { # Shipping Pain
+            "tone": "Thấu hiểu, Chia sẻ gánh nặng tài chính.",
+            "action": "Thừa nhận phí vận chuyển tuyến này cao và cảm ơn khách đã tin tưởng.",
+            "value_add": "TẶNG NGAY Voucher hỗ trợ phí ship cho đơn sau (như một sự bù đắp)."
+        },
+        3: { # Local Goldmine (Khách gần - Ít rủi ro)
+            "tone": "Thân thiện, Gần gũi (Hàng xóm).",
+            "action": "Thông báo hàng đang ở kho rất gần và sẽ đến cực nhanh.",
+            "value_add": "Mời đánh giá 5 sao để nhận ưu đãi thành viên thân thiết."
         },
         0: { # Standard
-            "tone": "Chuyên nghiệp, Rõ ràng, Tin cậy.",
-            "action": "Thông báo quy trình chuẩn bị hàng đang diễn ra suôn sẻ.",
-            "value_add": "Cung cấp kênh hỗ trợ nhanh nếu cần."
-        },
-        3: { # Local/Remote
-            "tone": "Gần gũi, Chu đáo.",
-            "action": "Lưu ý về tuyến vận chuyển xa và cam kết theo dõi sát sao.",
-            "value_add": "Cam kết cập nhật lộ trình thường xuyên."
+            "tone": "Chuyên nghiệp, Nhanh gọn.",
+            "action": "Xác nhận đơn hàng đang đi đúng tiến độ.",
+            "value_add": "Cung cấp link theo dõi đơn hàng trực tiếp."
         }
     }
     return strategies.get(cluster_id, strategies[0])

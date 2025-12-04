@@ -435,10 +435,9 @@ def compute_shap_values(model, X_train, X_test, feature_names=None,
         plt.figure(figsize=(10, 8))
         shap.summary_plot(shap_values, X_test, max_display=max_display, show=False)
         plt.tight_layout()
-        plt.show()
         plt.savefig('reports/shap_summary.png', bbox_inches='tight', dpi=300)
         print("✓ Saved SHAP plot to reports folder")
-
+        plt.show()
     return {
         'shap_values': shap_values,
         'explainer': explainer,

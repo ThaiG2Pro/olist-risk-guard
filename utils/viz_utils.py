@@ -215,35 +215,44 @@ def plot_cluster_heatmap(profile_summary, figsize=(12, 6)):
         fmt='.2f', ax=ax
     )
     ax.set_title('Cluster Characteristics Heatmap (Red=Risk/High, Green=Safe/Low)')
+    fig.savefig('reports/cluster-heatmap.png', bbox_inches='tight', dpi=300)
+
     return fig
 
-def plot_business_impact(df_results, tier_summary, low_th, high_th, figsize=(14, 6)):
-    """
-    Vẽ biểu đồ tác động kinh doanh: Phân phối điểm & Lift Chart (Dùng cho Phase 4)
-    """
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize)
 
-    # 1. Distribution
-    sns.histplot(data=df_results, x='risk_score', hue='y_true', bins=50, kde=True, element="step", ax=ax1)
-    ax1.axvline(low_th, color=COLORS['warning'], linestyle='--', label='Yellow Thresh')
-    ax1.axvline(high_th, color=COLORS['danger'], linestyle='--', label='Red Thresh')
-    ax1.set_title('Risk Score Distribution')
-    ax1.legend()
+def plot_business_impact(df_results, tier_summary,  figsize=(8, 6)):
+    """
+    Vẽ và lưu biểu đồ Lift Chart (Hiệu quả mô hình so với ngẫu nhiên).
+    Lưu ý: Đã loại bỏ phần Distribution plot và các tham số threshold không cần thiết.
+    """
 
-    # 2. Lift Chart
+    fig, ax = plt.subplots(figsize=figsize)
+
+
     if 'Lift' not in tier_summary.columns and 'Precision' in tier_summary.columns:
          avg_rate = df_results['y_true'].mean()
          tier_summary['Lift'] = tier_summary['Precision'] / avg_rate
 
-    sns.barplot(data=tier_summary, x='Tier', y='Lift', palette=[COLORS['danger'], COLORS['warning'], COLORS['neutral']], ax=ax2)
-    ax2.axhline(1.0, color='black', linestyle='--', label='Baseline')
+    # Vẽ biểu đồ 
+    sns.barplot(data=tier_summary, x='Tier', y='Lift', 
+                palette=[COLORS['danger'], COLORS['warning'], COLORS['neutral']], 
+                ax=ax)
     
-    for p in ax2.patches:
+    # Vẽ đường Baseline (Lift = 1.0)
+    ax.axhline(1.0, color='black', linestyle='--', label='Baseline (Random)')
+    
+    # Thêm nhãn giá trị lên cột
+    for p in ax.patches:
         value = p.get_height()
         if not pd.isna(value):
-            ax2.text(p.get_x() + p.get_width()/2, value, f'{value:.2f}x', ha='center', va='bottom')
+            ax.text(p.get_x() + p.get_width()/2, value, f'{value:.2f}x', 
+                    ha='center', va='bottom', fontweight='bold')
             
-    ax2.set_title('Lift Chart (Efficiency vs Random)')
-    
+    ax.set_title('Lift Chart: Model Efficiency vs Random Guessing')
+    ax.set_ylabel('Lift (Times better than Average)')
+    ax.legend()
+    fig.savefig('reports/lift-chart.png', bbox_inches='tight', dpi=300)
+
     plt.tight_layout()
+
     return fig
