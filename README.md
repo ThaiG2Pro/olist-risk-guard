@@ -16,9 +16,8 @@
 - [3. Model Performance & Card](#3-model-performance--card)
 - [4. GenAI Strategy](#4-genai-strategy)
 - [5. Installation & Setup](#5-installation--setup)
-- [6. Project Structure
-- [7. Limitations & Future Work](#6-limitations--future-work)
-- 
+- [6. Project Structure](#6-project-structure)
+- [7. Limitations & Future Work](#7-limitations--future-work)
 
 ---
 
@@ -41,6 +40,8 @@ Thay vì quy trình truyền thống (Khách complain $\rightarrow$ CS xử lý)
 
 > _Giao diện Dashboard hiển thị danh sách đơn hàng rủi ro cao và tính năng AI soạn email tự động._
 
+![App Demo](demo-olist-risk-guard.gif)
+
 
 ---
 
@@ -54,17 +55,17 @@ graph TD
         A["Olist Database (Orders, Reviews, Sellers...)"] --> B["Data Cleaning & Merge"]
     end
 
-    subgraph "Phase 1 & 2: Analytics Core"
+    subgraph "Analytics Core"
         B --> C{"Feature Engineering"}
         C -->|Stateless| D["Time/Distance Features"]
         C -->|Stateful| E["Seller Risk Score / Route History"]
         D --> F["K-Means Clustering"]
         E --> F
-        D --> G["Hybrid Model (LGBM + Calibration)"]
+        D --> G["Model (Logistic + Calibration)"]
         E --> G
     end
 
-    subgraph "Phase 3: Application & Action"
+    subgraph "Application & Action"
         G -->|Risk Score| H["Decision Engine (Thresholding)"]
         F -->|Cluster ID| H
         H --> I{"High Risk?"}
@@ -100,14 +101,15 @@ graph TD
 
 ### Performance Metrics (Test Set)
 
-Chúng tôi tối ưu hóa theo **F2-Score** để ưu tiên **Recall** (Thà báo nhầm còn hơn bỏ sót rủi ro).
+Chúng tôi **không** sử dụng Accuracy hay AUC làm thước đo chính, vì dữ liệu hành vi review chứa nhiều nhiễu cảm xúc khó dự đoán. 
+**Business Metrics (Kết quả thực tế)** Chúng tôi chia đơn hàng thành các tầng rủi ro. Chiến lược là tập trung nguồn lực CSKH vào **Top 5% (Red Zone)**. 
 
-| **Metric**            | **Value** | **Meaning**                                               |
-| --------------------- | --------- | --------------------------------------------------------- |
-| **ROC-AUC**           | **0.72**  | Khả năng phân loại tốt của mô hình.                       |
-| **Brier Score**       | **0.18**  | Xác suất dự báo sát với thực tế (sau khi Calibration).    |
-| **Recall (Top Tier)** | **~65%**  | Bắt được 65% số đơn hàng có vấn đề trong nhóm rủi ro cao. |
-| **Lift Score**        | **1.88x** | Hiệu quả gấp đôi so với trung bình thị trường.            |
+| Metric                   | Giá trị   | Ý nghĩa kinh doanh (Business Value)                                                                                      |
+| :----------------------- | :-------- | :----------------------------------------------------------------------------------------------------------------------- |
+| **Precision (Red Zone)** | **31%**   | Cứ **3 cuộc gọi** chăm sóc khách hàng, nhân viên sẽ tiếp cận đúng **1 khách hàng** đang thực sự gặp vấn đề nghiêm trọng. |
+| **Baseline Precision**   | ~16.4%    | Nếu chọn ngẫu nhiên, nhân viên phải gọi 6 cuộc mới trúng 1 người (lãng phí nguồn lực).                                   |
+| **Lift Score**           | **1.88x** | **Hiệu quả gấp gần 2 lần** so với quy trình ngẫu nhiên hiện tại.                                                         |
+
 
 ---
 
@@ -165,7 +167,7 @@ Hệ thống không dùng template tĩnh. Chúng tôi sử dụng **Prompt Engin
 
 
 ---
-## 6 Cấu trúc thư mục (Project Structure)
+## 6. Project Structure
 
 ```
 Olist-Risk-Guard/
